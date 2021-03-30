@@ -1,4 +1,4 @@
-[200~/*
+/*
  * Author: Chad Froebel <chadfroebel@gmail.com>
  *
  * Port to guacamole: engstk <eng.stk@sapo.pt>
