@@ -1,4 +1,4 @@
-/*
+ц/*
  * Copyright (C) 2012 ARM Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -54,7 +54,6 @@ do {									\
 	  "+r" (loops)							\
 	: "r" (oparg), "Ir" (-EFAULT), "Ir" (-EAGAIN)			\
 	: "memory");							\
->>>>>>> v4.9.264
 } while (0)
 
 static inline int
@@ -128,18 +127,11 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *_uaddr,
 "5:	mov	%w0, %w7\n"
 "	b	4b\n"
 "	.popsection\n"
-<<<<<<< HEAD
-	_ASM_EXTABLE(1b, 4b)
-	_ASM_EXTABLE(2b, 4b)
-	: "+r" (ret), "=&r" (val), "+Q" (*uaddr), "=&r" (tmp)
-	: "r" (oldval), "r" (newval), "Ir" (-EFAULT)
-=======
 	_ASM_EXTABLE(1b, 5b)
 	_ASM_EXTABLE(2b, 5b)
 ALTERNATIVE("nop", SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
 	: "+r" (ret), "=&r" (val), "+Q" (*uaddr), "=&r" (tmp), "+r" (loops)
 	: "r" (oldval), "r" (newval), "Ir" (-EFAULT), "Ir" (-EAGAIN)
->>>>>>> v4.9.264
 	: "memory");
 	uaccess_disable();
 
