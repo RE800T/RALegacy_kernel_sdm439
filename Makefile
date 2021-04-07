@@ -758,6 +758,9 @@ ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS   += -Os
 else
 KBUILD_CFLAGS   += -O2
+ifeq ($(cc-name),clang)
+KBUILD_CFLAGS   += -O3
+endif
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one
@@ -780,6 +783,7 @@ ifdef CONFIG_READABLE_ASM
 KBUILD_CFLAGS += $(call cc-option,-fno-reorder-blocks,) \
                  $(call cc-option,-fno-ipa-cp-clone,) \
                  $(call cc-option,-fno-partial-inlining)
+
 endif
 
 ifneq ($(CONFIG_FRAME_WARN),0)
