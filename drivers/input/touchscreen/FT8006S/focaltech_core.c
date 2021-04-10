@@ -1320,22 +1320,13 @@ static int fb_notifier_callback(struct notifier_block *self,
 		if (FB_EARLY_EVENT_BLANK == event) {
 			FTS_INFO("resume: event = %lu, not care\n", event);
 		} else if (FB_EVENT_BLANK == event) {
-<<<<<<< HEAD
-			queue_work(FT8006S_fts_data->ts_workqueue,
-				   &FT8006S_fts_data->ft8006s_resume_work);
-=======
-			queue_work(fts_data->ts_workqueue,
-				   &fts_data->ft8006s_resume_work);
->>>>>>> 6cb1fa8830f9... FT8006S,ITK9881H: fix resume_work multiple definitions
+			queue_work(ts_data->ts_workqueue,
+				   &ts_data->ft8006s_resume_work);
 		}
 		break;
 	case FB_BLANK_POWERDOWN:
 		if (FB_EARLY_EVENT_BLANK == event) {
-<<<<<<< HEAD
-			cancel_work_sync(&FT8006S_fts_data->ft8006s_resume_work);
-=======
-			cancel_work_sync(&fts_data->ft8006s_resume_work);
->>>>>>> 6cb1fa8830f9... FT8006S,ITK9881H: fix resume_work multiple definitions
+			cancel_work_sync(&ts_data->ft8006s_resume_work);
 			fts_ts_suspend(ts_data->dev);
 		} else if (FB_EVENT_BLANK == event) {
 			FTS_INFO("suspend: event = %lu, not care\n", event);
