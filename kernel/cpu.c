@@ -1247,8 +1247,8 @@ static int switch_to_fair_policy(void)
 
 static int do_cpu_up(unsigned int cpu, enum cpuhp_state target)
 {
-	struct cpumask newmask;
-	int err;
+	int err = 0;
+	int switch_err = 0;
 
 	if (!cpu_possible(cpu)) {
 		pr_err("can't online cpu %d because it is not configured as may-hotadd at boot time\n",
@@ -1259,13 +1259,14 @@ static int do_cpu_up(unsigned int cpu, enum cpuhp_state target)
 		return -EINVAL;
 	}
 
-	cpumask_andnot(&newmask, cpu_online_mask, cpumask_of(cpu));
+	switch_err = switch_to_rt_policy();
+	if (switch_err < 0)
+		return switch_err;
 
-	/* One big cluster CPU and one little cluster CPU must remain online */
-	if (!cpumask_intersects(&newmask, cpu_perf_mask) ||
-	    !cpumask_intersects(&newmask, cpu_lp_mask))
-		return -EINVAL;
-		
+	err = try_online_node(cpu_to_node(cpu));
+	if (err)
+		return err;
+
 	cpu_maps_update_begin();
 
 	if (cpu_hotplug_disabled) {
@@ -1305,7 +1306,6 @@ int freeze_secondary_cpus(int primary)
 	int cpu, error = 0;
 
 	cpu_maps_update_begin();
-	unaffine_perf_irqs();
 	if (!cpu_online(primary))
 		primary = cpumask_first(cpu_online_mask);
 	/*
@@ -1388,7 +1388,6 @@ void enable_nonboot_cpus(void)
 	arch_enable_nonboot_cpus_end();
 
 	cpumask_clear(frozen_cpus);
-	reaffine_perf_irqs();
 out:
 	cpu_maps_update_done();
 }
