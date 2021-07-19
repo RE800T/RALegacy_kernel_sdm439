@@ -651,13 +651,6 @@ static int sendcmd(struct adreno_device *adreno_dev,
 		return ret;
 	}
 
-	secs = time.ktime;
-	nsecs = do_div(secs, 1000000000);
-
-	trace_adreno_cmdbatch_submitted(drawobj, (int) dispatcher->inflight,
-		time.ticks, (unsigned long) secs, nsecs / 1000, drawctxt->rb,
-		adreno_get_rptr(drawctxt->rb));
-
 	mutex_unlock(&device->mutex);
 
 	dispatch_q->cmd_q[dispatch_q->tail] = cmdobj;
